@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>IRIS Digital Services | ids.io.vn</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
 html, body {
     margin: 0;
@@ -14,7 +13,6 @@ html, body {
     font-family: Arial, sans-serif;
     color: #fff;
 }
-
 .hud {
     position: fixed;
     top: 18px;
@@ -29,12 +27,10 @@ html, body {
     text-align: center;
     z-index: 10;
 }
-
 .hud b {
     color: #38bdf8;
     letter-spacing: 2px;
 }
-
 footer {
     position: fixed;
     bottom: 14px;
@@ -57,168 +53,172 @@ footer {
     © 2025 IRIS Digital Services
 </footer>
 
+<!-- ===== Load Three.js Libraries in Correct Order ===== -->
 <script src="https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.min.js"></script>
-<script src="https://threejs.org/examples/js/loaders/FontLoader.js"></script>
-<script src="https://threejs.org/examples/js/geometries/TextGeometry.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.161.0/examples/js/loaders/FontLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.161.0/examples/js/geometries/TextGeometry.js"></script>
 
 <script>
-/* ======================
-   SCENE CORE
-====================== */
-const scene = new THREE.Scene();
-scene.fog = new THREE.Fog(0x020617, 10, 60);
+window.onload = function() {
 
-const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 200);
-camera.position.set(0, 0, 18);
+    /* ======================
+       SCENE
+    ===================== */
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0x020617, 10, 60);
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(innerWidth, innerHeight);
-renderer.setPixelRatio(devicePixelRatio);
-document.body.appendChild(renderer.domElement);
+    const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 200);
+    camera.position.set(0, 0, 18);
 
-/* ======================
-   LIGHTS
-====================== */
-scene.add(new THREE.AmbientLight(0x38bdf8, 0.35));
-const keyLight = new THREE.PointLight(0x38bdf8, 3);
-keyLight.position.set(6, 6, 10);
-scene.add(keyLight);
-
-/* ======================
-   STARFIELD
-====================== */
-const starsGeo = new THREE.BufferGeometry();
-const starCount = 4000;
-const starPos = new Float32Array(starCount * 3);
-for (let i = 0; i < starPos.length; i++) {
-    starPos[i] = (Math.random() - 0.5) * 160;
-}
-starsGeo.setAttribute("position", new THREE.BufferAttribute(starPos, 3));
-
-const stars = new THREE.Points(
-    starsGeo,
-    new THREE.PointsMaterial({
-        color: 0x38bdf8,
-        size: 0.06,
-        transparent: true,
-        opacity: 0.6
-    })
-);
-scene.add(stars);
-
-/* ======================
-   SHADER GLOW MATERIAL
-====================== */
-const glowMaterial = new THREE.ShaderMaterial({
-    uniforms: {
-        time: { value: 0 },
-        color: { value: new THREE.Color(0x38bdf8) }
-    },
-    vertexShader: `
-        varying vec3 vNormal;
-        void main() {
-            vNormal = normalize(normalMatrix * normal);
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
-        }
-    `,
-    fragmentShader: `
-        uniform vec3 color;
-        varying vec3 vNormal;
-        void main() {
-            float intensity = pow(0.6 - dot(vNormal, vec3(0.0,0.0,1.0)), 2.0);
-            gl_FragColor = vec4(color * intensity, intensity);
-        }
-    `,
-    blending: THREE.AdditiveBlending,
-    transparent: true,
-    side: THREE.BackSide
-});
-
-/* ======================
-   LOGO + ENERGY AURA
-====================== */
-let logo;
-new THREE.FontLoader().load(
-    "https://threejs.org/examples/fonts/helvetiker_bold.typeface.json",
-    font => {
-        const geo = new THREE.TextGeometry("IRIS\nDIGITAL\nSERVICES", {
-            font,
-            size: 1.1,
-            height: 0.3
-        });
-        geo.center();
-
-        const core = new THREE.Mesh(
-            geo,
-            new THREE.MeshStandardMaterial({
-                color: 0x38bdf8,
-                emissive: 0x38bdf8,
-                emissiveIntensity: 0.8,
-                metalness: 0.7,
-                roughness: 0.2
-            })
-        );
-
-        const glow = new THREE.Mesh(geo.clone(), glowMaterial);
-        glow.scale.multiplyScalar(1.12);
-
-        logo = new THREE.Group();
-        logo.add(core);
-        logo.add(glow);
-
-        scene.add(logo);
-    }
-);
-
-/* ======================
-   INTERACTION
-====================== */
-let mx = 0, my = 0;
-addEventListener("mousemove", e => {
-    mx = (e.clientX / innerWidth - 0.5);
-    my = (e.clientY / innerHeight - 0.5);
-});
-
-/* ======================
-   CINEMATIC CAMERA PATH
-====================== */
-addEventListener("scroll", () => {
-    const t = scrollY / (document.body.scrollHeight - innerHeight);
-    camera.position.z = 18 - t * 12;
-    camera.position.y = t * 3;
-});
-
-/* ======================
-   ANIMATION LOOP
-====================== */
-const clock = new THREE.Clock();
-
-function animate() {
-    requestAnimationFrame(animate);
-    const t = clock.getElapsedTime();
-
-    stars.rotation.y += 0.0006;
-    stars.rotation.x += 0.0003;
-
-    if (logo) {
-        logo.rotation.y = t * 0.4 + mx * 0.8;
-        logo.rotation.x = my * 0.6;
-        logo.scale.setScalar(1 + Math.sin(t * 2) * 0.02);
-        glowMaterial.uniforms.time.value = t;
-    }
-
-    renderer.render(scene, camera);
-}
-animate();
-
-/* ======================
-   RESIZE
-====================== */
-addEventListener("resize", () => {
-    camera.aspect = innerWidth / innerHeight;
-    camera.updateProjectionMatrix();
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(innerWidth, innerHeight);
-});
+    renderer.setPixelRatio(devicePixelRatio);
+    document.body.appendChild(renderer.domElement);
+
+    /* ======================
+       LIGHTS
+    ===================== */
+    scene.add(new THREE.AmbientLight(0x38bdf8, 0.35));
+    const keyLight = new THREE.PointLight(0x38bdf8, 3);
+    keyLight.position.set(6, 6, 10);
+    scene.add(keyLight);
+
+    /* ======================
+       STARFIELD
+    ===================== */
+    const starsGeo = new THREE.BufferGeometry();
+    const starCount = 4000;
+    const starPos = new Float32Array(starCount * 3);
+    for (let i = 0; i < starPos.length; i++) {
+        starPos[i] = (Math.random() - 0.5) * 160;
+    }
+    starsGeo.setAttribute("position", new THREE.BufferAttribute(starPos, 3));
+
+    const stars = new THREE.Points(
+        starsGeo,
+        new THREE.PointsMaterial({
+            color: 0x38bdf8,
+            size: 0.06,
+            transparent: true,
+            opacity: 0.6
+        })
+    );
+    scene.add(stars);
+
+    /* ======================
+       SHADER GLOW MATERIAL
+    ===================== */
+    const glowMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+            time: { value: 0 },
+            color: { value: new THREE.Color(0x38bdf8) }
+        },
+        vertexShader: `
+            varying vec3 vNormal;
+            void main() {
+                vNormal = normalize(normalMatrix * normal);
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+            }
+        `,
+        fragmentShader: `
+            uniform vec3 color;
+            varying vec3 vNormal;
+            void main() {
+                float intensity = pow(0.6 - dot(vNormal, vec3(0.0,0.0,1.0)), 2.0);
+                gl_FragColor = vec4(color * intensity, intensity);
+            }
+        `,
+        blending: THREE.AdditiveBlending,
+        transparent: true,
+        side: THREE.BackSide
+    });
+
+    /* ======================
+       LOGO + ENERGY AURA
+    ===================== */
+    let logo;
+    new THREE.FontLoader().load(
+        "https://threejs.org/examples/fonts/helvetiker_bold.typeface.json",
+        font => {
+            const geo = new THREE.TextGeometry("IRIS\nDIGITAL\nSERVICES", {
+                font,
+                size: 1.1,
+                height: 0.3
+            });
+            geo.center();
+
+            const core = new THREE.Mesh(
+                geo,
+                new THREE.MeshStandardMaterial({
+                    color: 0x38bdf8,
+                    emissive: 0x38bdf8,
+                    emissiveIntensity: 0.8,
+                    metalness: 0.7,
+                    roughness: 0.2
+                })
+            );
+
+            const glow = new THREE.Mesh(geo.clone(), glowMaterial);
+            glow.scale.multiplyScalar(1.12);
+
+            logo = new THREE.Group();
+            logo.add(core);
+            logo.add(glow);
+
+            scene.add(logo);
+        }
+    );
+
+    /* ======================
+       INTERACTION
+    ===================== */
+    let mx = 0, my = 0;
+    addEventListener("mousemove", e => {
+        mx = (e.clientX / innerWidth - 0.5);
+        my = (e.clientY / innerHeight - 0.5);
+    });
+
+    /* ======================
+       SCROLL CAMERA FLY
+    ===================== */
+    addEventListener("scroll", () => {
+        const t = scrollY / (document.body.scrollHeight - innerHeight);
+        camera.position.z = 18 - t * 12;
+        camera.position.y = t * 3;
+    });
+
+    /* ======================
+       ANIMATE
+    ===================== */
+    const clock = new THREE.Clock();
+
+    function animate() {
+        requestAnimationFrame(animate);
+        const t = clock.getElapsedTime();
+
+        stars.rotation.y += 0.0006;
+        stars.rotation.x += 0.0003;
+
+        if (logo) {
+            logo.rotation.y = t * 0.4 + mx * 0.8;
+            logo.rotation.x = my * 0.6;
+            logo.scale.setScalar(1 + Math.sin(t * 2) * 0.02);
+            glowMaterial.uniforms.time.value = t;
+        }
+
+        renderer.render(scene, camera);
+    }
+    animate();
+
+    /* ======================
+       RESIZE
+    ===================== */
+    addEventListener("resize", () => {
+        camera.aspect = innerWidth / innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(innerWidth, innerHeight);
+    });
+};
 </script>
 
 </body>
