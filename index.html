@@ -1,132 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>IRIS Digital Services | ids.io.vn</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-html, body {
-  margin:0; padding:0;
-  height:400vh;
-  background:#020617;
-  overflow-x:hidden;
-  font-family:Arial,sans-serif;
-  color:#fff;
-}
-.hud {
-  position:fixed;
-  top:18px;
-  left:50%;
-  transform:translateX(-50%);
-  padding:14px 26px;
-  background:rgba(2,6,23,0.55);
-  backdrop-filter:blur(16px);
-  border-radius:20px;
-  border:1px solid rgba(56,189,248,0.35);
-  box-shadow:0 0 50px rgba(56,189,248,0.3);
-  text-align:center;
-  z-index:10;
-}
-.hud b { color:#38bdf8; letter-spacing:2px; }
-footer {
-  position:fixed; bottom:14px; width:100%; text-align:center; font-size:12px; opacity:0.7; z-index:10;
-}
-canvas { display:block; }
-</style>
+    <meta charset="UTF-8">
+    <title>Iris Digital Services</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f6f7fb;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            position: relative;
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #5b4ccf, #8f7cf3);
+            overflow: hidden;
+        }
+
+        /* SVG pattern overlay */
+        header svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.25;
+        }
+
+        header .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        section {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            color: #5b4ccf;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 6px;
+        }
+
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .service-box {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+        }
+
+        footer {
+            background-color: #1f1f1f;
+            color: #bbb;
+            text-align: center;
+            padding: 24px;
+            margin-top: 60px;
+            font-size: 14px;
+        }
+
+        a {
+            color: #5b4ccf;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
 
-<div class="hud">
-  <b>IRIS DIGITAL SERVICES</b><br>ids.io.vn · sales@ids.io.vn
-</div>
+<header>
+    <!-- Stylized Iris SVG Pattern -->
+    <svg viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice">
+        <defs>
+            <pattern id="irisPattern" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+                <path d="M60 10 C70 40, 110 40, 60 110 C10 40, 50 40, 60 10 Z"
+                      fill="none"
+                      stroke="white"
+                      stroke-width="2"/>
+                <path d="M60 25 L60 95"
+                      stroke="white"
+                      stroke-width="1"/>
+            </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#irisPattern)"/>
+    </svg>
 
-<footer>© 2025 IRIS Digital Services</footer>
+    <div class="content">
+        <h1>Iris Digital Services</h1>
+        <p>Modern IT & Translation Solutions</p>
+    </div>
+</header>
 
-<script>
-// ===== Three.js core (minified) =====
-// Here we embed a minimal Three.js core (r91) as IIFE
-// Normally we would copy-paste three.min.js content here
-// For brevity, assume THREE is available here
+<section>
+    <h2>About Us</h2>
+    <p>
+        Iris Digital Services is a professional business household delivering
+        reliable IT and translation services. Inspired by the Iris flower,
+        we value clarity, precision, and trust in every solution we provide.
+    </p>
+</section>
 
-// ===== Minimal Font (helvetiker) embedded =====
-// Define a tiny JSON font object for TextGeometry
-// Normally we embed the full font JSON as a JS object
-// e.g., const fontJSON = {...};
+<section>
+    <h2>Our Services</h2>
+    <div class="services">
+        <div class="service-box">
+            <h3>IT Services</h3>
+            <ul>
+                <li>IT consulting and technical support</li>
+                <li>System setup and basic administration</li>
+                <li>Software and application support</li>
+                <li>Digital solutions for small businesses</li>
+            </ul>
+        </div>
 
-// ===== Initialize Scene =====
-const scene = new THREE.Scene();
-scene.fog = new THREE.Fog(0x020617,10,60);
+        <div class="service-box">
+            <h3>Translation Services</h3>
+            <ul>
+                <li>Professional document translation</li>
+                <li>Business and technical content</li>
+                <li>Editing and proofreading</li>
+                <li>High accuracy and confidentiality</li>
+            </ul>
+        </div>
+    </div>
+</section>
 
-const camera = new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,200);
-camera.position.set(0,0,18);
+<section>
+    <h2>Contact</h2>
+    <p>
+        Email: <a href="mailto:sales@ids.io.vn">sales@ids.io.vn</a>
+    </p>
+</section>
 
-const renderer = new THREE.WebGLRenderer({antialias:true});
-renderer.setSize(window.innerWidth,window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
-document.body.appendChild(renderer.domElement);
+<footer>
+    © Iris Digital Services. All rights reserved.
+</footer>
 
-// Lights
-scene.add(new THREE.AmbientLight(0x38bdf8,0.35));
-const keyLight = new THREE.PointLight(0x38bdf8,3);
-keyLight.position.set(6,6,10);
-scene.add(keyLight);
-
-// Starfield
-const starsGeo = new THREE.BufferGeometry();
-const starCount = 4000;
-const starPos = new Float32Array(starCount*3);
-for(let i=0;i<starPos.length;i++){starPos[i]=(Math.random()-0.5)*160;}
-starsGeo.setAttribute("position", new THREE.BufferAttribute(starPos,3));
-const stars = new THREE.Points(
-  starsGeo,
-  new THREE.PointsMaterial({color:0x38bdf8,size:0.06,transparent:true,opacity:0.6})
-);
-scene.add(stars);
-
-// Glow shader
-const glowMaterial = new THREE.ShaderMaterial({
-  uniforms:{time:{value:0}, color:{value:new THREE.Color(0x38bdf8)}},
-  vertexShader:`varying vec3 vNormal; void main(){vNormal=normalize(normalMatrix*normal); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
-  fragmentShader:`uniform vec3 color; varying vec3 vNormal; void main(){float intensity=pow(0.6-dot(vNormal,vec3(0,0,1)),2.0); gl_FragColor=vec4(color*intensity,intensity);}`,
-  blending:THREE.AdditiveBlending, transparent:true, side:THREE.BackSide
-});
-
-// 3D Text Logo
-let logo;
-const loader = new THREE.FontLoader();
-loader.load( // Here we could embed font as data URI or JS object
-  "data:application/json;base64,eyJm... (your base64 font JSON here) ...", 
-  font => {
-    const geo = new THREE.TextGeometry("IRIS\nDIGITAL\nSERVICES",{font,size:1.1,height:0.3});
-    geo.center();
-    const core = new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:0x38bdf8,emissive:0x38bdf8,emissiveIntensity:0.8,metalness:0.7,roughness:0.2}));
-    const glow = new THREE.Mesh(geo.clone(),glowMaterial);
-    glow.scale.multiplyScalar(1.12);
-    logo = new THREE.Group();
-    logo.add(core); logo.add(glow);
-    scene.add(logo);
-  }
-);
-
-// Interaction
-let mx=0,my=0;
-addEventListener("mousemove",e=>{mx=(e.clientX/window.innerWidth-0.5);my=(e.clientY/window.innerHeight-0.5);});
-addEventListener("scroll",()=>{const t=scrollY/(document.body.scrollHeight-window.innerHeight);camera.position.z=18-t*12;camera.position.y=t*3;});
-
-// Animate
-const clock=new THREE.Clock();
-function animate(){
-  requestAnimationFrame(animate);
-  const t=clock.getElapsedTime();
-  stars.rotation.y+=0.0006;
-  stars.rotation.x+=0.0003;
-  if(logo){logo.rotation.y=t*0.4+mx*0.8;logo.rotation.x=my*0.6;logo.scale.setScalar(1+Math.sin(t*2)*0.02);glowMaterial.uniforms.time.value=t;}
-  renderer.render(scene,camera);
-}
-animate();
-
-// Resize
-addEventListener("resize",()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);});
-</script>
 </body>
 </html>
