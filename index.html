@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Iris Digital Services</title>
 
-<!-- Favicon: logo vuông trắng nền -->
+<!-- Favicon: logo IDS vuông trắng nền -->
 <link rel="icon" type="image/svg+xml"
       href="data:image/svg+xml;utf8,
 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'>
@@ -53,20 +53,22 @@ body {
     padding: 0 24px;
 }
 
-/* Abstract Iris-inspired shapes */
+/* Animated abstract shapes */
 .iris-shape {
     position: absolute;
     border-radius: 50%;
-    filter: blur(120px);
     opacity: 0.35;
+    filter: blur(100px);
+    animation: float 25s ease-in-out infinite alternate;
 }
 
 .shape1 {
     width: 400px;
     height: 400px;
     background: var(--accent);
-    top: -120px;
-    right: -100px;
+    top: -100px;
+    right: -120px;
+    animation-delay: 0s;
 }
 
 .shape2 {
@@ -75,14 +77,31 @@ body {
     background: var(--primary);
     bottom: -140px;
     left: -120px;
+    animation-delay: 5s;
 }
 
+.shape3 {
+    width: 300px;
+    height: 300px;
+    background: #b0b3f0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: 10s;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px) translateX(0px); }
+    50% { transform: translateY(-30px) translateX(20px); }
+    100% { transform: translateY(0px) translateX(0px); }
+}
+
+/* Hero content */
 .hero-content {
     position: relative;
     z-index: 2;
 }
 
-/* Logo inside hero */
 .hero svg {
     width: 180px;
     height: auto;
@@ -151,21 +170,21 @@ a {
 <div class="hero">
     <div class="iris-shape shape1"></div>
     <div class="iris-shape shape2"></div>
+    <div class="iris-shape shape3"></div>
 
     <div class="hero-content">
-        <!-- Logo Wordmark -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
-            <rect width="300" height="300" fill="white"/>
-            <text x="150" y="155" text-anchor="middle"
+        <!-- Logo gradient -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100" style="width:180px;height:auto;margin-bottom:24px;">
+            <defs>
+                <linearGradient id="logo-gradient" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#5f63c9"/>
+                    <stop offset="100%" stop-color="#9fa2e8"/>
+                </linearGradient>
+            </defs>
+            <text x="150" y="60" text-anchor="middle"
                   font-family="Segoe UI, Arial, Helvetica, sans-serif"
-                  font-size="96" font-weight="600" letter-spacing="6"
-                  fill="#222531">IDS</text>
-            <line x1="70" y1="175" x2="230" y2="175" stroke="#5f63c9" stroke-width="4"/>
-            <text x="150" y="215" text-anchor="middle"
-                  font-family="Segoe UI, Arial, Helvetica, sans-serif"
-                  font-size="18" letter-spacing="1.2" fill="#555">
-                Iris Digital Services
-            </text>
+                  font-size="96" font-weight="600"
+                  fill="url(#logo-gradient)">IDS</text>
         </svg>
 
         <h1>Professional IT & Translation Services</h1>
